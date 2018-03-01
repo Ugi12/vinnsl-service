@@ -6,10 +6,10 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @SpringBootApplication
 @EnableMongoRepositories({"at.ac.univie.a0908270.nncloud.db"})
-public class VinnslApplication {
+public class VinnslServiceApplication {
 	
 	public static void main(String[] args) {
-		SpringApplication.run(VinnslApplication.class, args);
+		SpringApplication.run(VinnslServiceApplication.class, args);
 	}
 	
 	//public void run(String... args) throws Exception {

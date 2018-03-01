@@ -105,8 +105,33 @@
                     </enricher>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>com.qmino</groupId>
+                <artifactId>miredot-plugin</artifactId>
+                <version>2.1-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>restdoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <organizationId>d2dc607b-d0a8-45c4-aec0-1425551157ee</organizationId>
+                    <restModel>
+                        <restFramework>
+                            <name>spring-mvc</name>
+                        </restFramework>
+                    </restModel>
+                    <output>
+                        <html></html>
+                    </output>
+                    <!-- insert other configuration here (optional) -->
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
-
+    
 </project>

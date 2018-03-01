@@ -1,6 +1,6 @@
 package at.ac.univie.a0908270.nncloud.db;
 
-import at.ac.univie.a0908270.nncloud.db.definition.backpropagation.VinnslDefinition;
+import at.ac.univie.a00908270.vinnsl.schema.*;
 import org.springframework.data.annotation.Id;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -10,23 +10,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Vinnsl {
 	
 	@Id
-	@XmlElement
-	public String identfier;
+	public String identifier;
 	
 	@XmlElement
-	public VinnslDefinition definition;
+	public Definition definition;
 	
 	@XmlElement
-	public String description;
+	public Description description;
 	
 	@XmlElement
-	public String data;
+	public Dataschema data;
 	
 	@XmlElement
-	public String instance;
+	public Instanceschema instance;
 	
 	@XmlElement
-	public String result;
+	public Resultschema result;
 	
 	public Vinnsl() {
 	}
@@ -35,8 +34,8 @@ public class Vinnsl {
 	@Override
 	public String toString() {
 		return String.format(
-				"VinnslDefinition[identfier=%s, definition='%s']",
-				identfier, definition);
+				"VinnslDefinition[identifier=%s, definition='%s']",
+				identifier, definition);
 	}
 	
 }
