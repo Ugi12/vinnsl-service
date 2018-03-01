@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement
 public class Vinnsl {
@@ -27,7 +28,11 @@ public class Vinnsl {
 	@XmlElement
 	public Resultschema result;
 	
+	@XmlTransient
+	public NnCloud nncloud;
+	
 	public Vinnsl() {
+		this.nncloud = new NnCloud();
 	}
 	
 	
