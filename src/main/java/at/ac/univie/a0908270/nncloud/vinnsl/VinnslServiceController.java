@@ -1,5 +1,6 @@
 package at.ac.univie.a0908270.nncloud.vinnsl;
 
+import at.ac.univie.a00908270.vinnsl.schema.Dataschema;
 import at.ac.univie.a0908270.nncloud.db.NeuronalNetworkRepository;
 import at.ac.univie.a0908270.nncloud.db.Vinnsl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,26 @@ public class VinnslServiceController {
 		
 		if (result != null) {
 			return ResponseEntity.ok().body(nnRepository.findOne(id));
+		} else {
+			//TODO https://stackoverflow.com/questions/36848562/add-a-body-to-a-404-not-found-exception
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@RequestMapping(value = "/vinnsl/{id}/addfile", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Vinnsl> addFileToVinnslNetwork(@PathVariable("id") String id, @RequestParam("fileId") String fileId) {
+		Vinnsl result = nnRepository.findOne(id);
+		
+		if (result != null) {
+			Dataschema dataschema = new Dataschema();
+			Dataschema.Data data = new Dataschema.Data();
+			data.setFile(fileId);
+			dataschema.setData(data);
+			result.data = dataschema;
+			
+			nnRepository.save(result);
+			
+			return ResponseEntity.ok().body(result);
 		} else {
 			//TODO https://stackoverflow.com/questions/36848562/add-a-body-to-a-404-not-found-exception
 			return ResponseEntity.notFound().build();
