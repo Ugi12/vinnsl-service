@@ -77,7 +77,7 @@
                     <resources>
                         <labels>
                             <all>
-                                <testProject>demo</testProject>
+                                <testProject>vinnsl-service</testProject>
                             </all>
                         </labels>
                     </resources>
@@ -98,7 +98,7 @@
                         </excludes>
                         <config>
                             <fmp-service>
-                                <name>demo</name>
+                                <name>vinnsl-service</name>
                                 <type>NodePort</type>
                             </fmp-service>
                         </config>
@@ -133,5 +133,19 @@
         </plugins>
     </build>
 
-    
+    <pluginRepositories>
+        <pluginRepository>
+            <id>miredot</id>
+            <name>MireDot Releases</name>
+            <url>http://nexus.qmino.com/content/repositories/miredot</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>miredot snapshots</id>
+            <name>MireDot Snapshots</name>
+            <url>http://nexus.qmino.com/content/repositories/miredot-snapshots</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
