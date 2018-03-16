@@ -1,6 +1,6 @@
 package at.ac.univie.a0908270.nncloud.vinnsl;
 
-import at.ac.univie.a00908270.vinnsl.schema.Dataschema;
+import at.ac.univie.a00908270.vinnsl.schema.*;
 import at.ac.univie.a0908270.nncloud.db.NeuronalNetworkRepository;
 import at.ac.univie.a0908270.nncloud.db.Vinnsl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +66,66 @@ public class VinnslServiceController {
 		}
 	}
 	
+	@RequestMapping(value = "/vinnsl/{id}/definition", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	ResponseEntity<?> addDefinitionToVinnsl(@PathVariable("id") String id, @RequestBody Definition def) {
+		Vinnsl result = nnRepository.findOne(id);
+		
+		result.definition = def;
+		nnRepository.save(result);
+		
+		if (result != null) {
+			return ResponseEntity.ok().body(nnRepository.findOne(id));
+		} else {
+			//TODO https://stackoverflow.com/questions/36848562/add-a-body-to-a-404-not-found-exception
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@RequestMapping(value = "/vinnsl/{id}/instanceschema", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	ResponseEntity<?> addInstanceToVinnsl(@PathVariable("id") String id, @RequestBody Instanceschema instance) {
+		Vinnsl result = nnRepository.findOne(id);
+		
+		result.instance = instance;
+		nnRepository.save(result);
+		
+		if (result != null) {
+			return ResponseEntity.ok().body(nnRepository.findOne(id));
+		} else {
+			//TODO https://stackoverflow.com/questions/36848562/add-a-body-to-a-404-not-found-exception
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@RequestMapping(value = "/vinnsl/{id}/trainingresult", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	ResponseEntity<?> addResultToVinnsl(@PathVariable("id") String id, @RequestBody Trainingresultschema trainingresult) {
+		Vinnsl result = nnRepository.findOne(id);
+		
+		result.trainingresult = trainingresult;
+		nnRepository.save(result);
+		
+		if (result != null) {
+			return ResponseEntity.ok().body(nnRepository.findOne(id));
+		} else {
+			//TODO https://stackoverflow.com/questions/36848562/add-a-body-to-a-404-not-found-exception
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@RequestMapping(value = "/vinnsl/{id}/resultschema", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	ResponseEntity<?> addResultToVinnsl(@PathVariable("id") String id, @RequestBody Resultschema resultSchema) {
+		Vinnsl result = nnRepository.findOne(id);
+		
+		result.result = resultSchema;
+		nnRepository.save(result);
+		
+		if (result != null) {
+			return ResponseEntity.ok().body(nnRepository.findOne(id));
+		} else {
+			//TODO https://stackoverflow.com/questions/36848562/add-a-body-to-a-404-not-found-exception
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
 	@RequestMapping(value = "/vinnsl/{id}/addfile", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Vinnsl> addFileToVinnslNetwork(@PathVariable("id") String id, @RequestParam("fileId") String fileId) {
 		Vinnsl result = nnRepository.findOne(id);
@@ -86,6 +146,15 @@ public class VinnslServiceController {
 		}
 	}
 	
+	@DeleteMapping(value = "/vinnsl/{id}")
+	public ResponseEntity removeNn(@PathVariable("id") String id) {
+		nnRepository.delete(id);
+		
+		return ResponseEntity.ok().build();
+		
+	}
+	
+	
 	@RequestMapping(value = "/vinnsl/deleteall", produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<?> removeAllNn() {
 		nnRepository.deleteAll();
@@ -97,6 +166,31 @@ public class VinnslServiceController {
 		
 	}
 	
+	@RequestMapping(value = "/dl4j/{id}", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity pullDl4JConfiguration(@PathVariable("id") String id, @RequestBody String dl4J) {
+		Vinnsl result = nnRepository.findOne(id);
+		
+		if (result != null) {
+			result.nncloud.setDl4jNetwork(dl4J);
+			nnRepository.save(result);
+			
+			return ResponseEntity.ok().build();
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@RequestMapping(value = "/dl4j/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<String> getDl4JNetwork(@PathVariable("id") String id) {
+		Vinnsl result = nnRepository.findOne(id);
+		
+		if (result != null) {
+			return ResponseEntity.ok().body(result.nncloud.getDl4jNetwork());
+		} else {
+			//TODO https://stackoverflow.com/questions/36848562/add-a-body-to-a-404-not-found-exception
+			return ResponseEntity.notFound().build();
+		}
+	}
 	
 	/*@RequestMapping(value = "/vinnsl/updatexml/{id}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_XML_VALUE)
 	ResponseEntity<?> updateXml(@PathVariable("id") String id, @RequestBody Vinnsl input) {

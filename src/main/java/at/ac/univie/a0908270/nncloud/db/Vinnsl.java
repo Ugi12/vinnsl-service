@@ -14,16 +14,19 @@ public class Vinnsl {
 	public String identifier;
 	
 	@XmlElement
-	public Definition definition;
+	public Description description;
 	
 	@XmlElement
-	public Description description;
+	public Definition definition;
 	
 	@XmlElement
 	public Dataschema data;
 	
 	@XmlElement
 	public Instanceschema instance;
+	
+	@XmlElement
+	public Trainingresultschema trainingresult;
 	
 	@XmlElement
 	public Resultschema result;
@@ -33,6 +36,10 @@ public class Vinnsl {
 	
 	public Vinnsl() {
 		this.nncloud = new NnCloud();
+	}
+	
+	public void initVinnsl() {
+		this.description = new Description();
 	}
 	
 	
