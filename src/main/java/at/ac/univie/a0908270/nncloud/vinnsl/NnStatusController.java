@@ -3,23 +3,23 @@ package at.ac.univie.a0908270.nncloud.vinnsl;
 import at.ac.univie.a0908270.nncloud.db.NeuronalNetworkRepository;
 import at.ac.univie.a0908270.nncloud.db.Vinnsl;
 import at.ac.univie.a0908270.nncloud.util.NnStatus;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@Api(description = "Processing Status Service for Neural Networks")
 @RequestMapping("/status")
-public class VinnslStatusController {
+public class NnStatusController {
 	
 	@Autowired
 	NeuronalNetworkRepository nnRepository;
@@ -28,7 +28,8 @@ public class VinnslStatusController {
 	MongoOperations mongoOperations;
 	
 	
-	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Get Status of all Neural Networks")
 	ResponseEntity<?> getAllStatus() {
 		Map<String, NnStatus> status = new HashMap<>();
 		
@@ -46,7 +47,8 @@ public class VinnslStatusController {
 		return ResponseEntity.ok(status);
 	}
 	
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Get Status of Neural Network")
 	ResponseEntity<?> getStatus(@PathVariable String id) {
 		Map<String, NnStatus> status = new HashMap<>();
 		
@@ -60,7 +62,9 @@ public class VinnslStatusController {
 		return ResponseEntity.ok(status);
 	}
 	
-	@RequestMapping(value = "/{id}/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
+	
+	@PutMapping(value = "/{id}/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Set Status of a Neural Network")
 	ResponseEntity<?> updateStatus(@PathVariable String id, @PathVariable NnStatus status) {
 		Vinnsl vinnsl = nnRepository.findOne(id);
 		vinnsl.nncloud.setStatus(status);

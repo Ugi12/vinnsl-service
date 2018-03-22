@@ -3,6 +3,8 @@ package at.ac.univie.a0908270.nncloud.vinnsl;
 import at.ac.univie.a00908270.vinnsl.schema.*;
 import at.ac.univie.a0908270.nncloud.db.NeuronalNetworkRepository;
 import at.ac.univie.a0908270.nncloud.db.Vinnsl;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -17,7 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@Api(description = "ViNNSL Neural Network Service")
 @RestController
 public class VinnslServiceController {
 	
@@ -33,7 +35,8 @@ public class VinnslServiceController {
 	@Autowired
 	MongoTemplate mongoTemplate;
 	
-	@RequestMapping(value = "/vinnsl", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/vinnsl", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "List all Neural Networks")
 	public ArrayList<Vinnsl> getAllVinnslNetworks() {
 		ArrayList<Vinnsl> nnList = new ArrayList<>();
 		
@@ -43,7 +46,8 @@ public class VinnslServiceController {
 		return nnList;
 	}
 	
-	@RequestMapping(value = "/vinnsl", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@PostMapping(value = "/vinnsl", consumes = {MediaType.APPLICATION_XML_VALUE})
+	@ApiOperation(value = "Import a new ViNNSL XML Defintion")
 	ResponseEntity<?> addXml(@RequestBody Vinnsl vinnsl) {
 		nnRepository.insert(vinnsl);
 		
@@ -54,7 +58,8 @@ public class VinnslServiceController {
 		return ResponseEntity.created(location).build();
 	}
 	
-	@RequestMapping(value = "/vinnsl/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@GetMapping(value = "/vinnsl/{id}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@ApiOperation(value = "Get Neural Network Object")
 	public ResponseEntity<Vinnsl> getVinnslNetwork(@PathVariable("id") String id) {
 		Vinnsl result = nnRepository.findOne(id);
 		
@@ -66,14 +71,14 @@ public class VinnslServiceController {
 		}
 	}
 	
-	@RequestMapping(value = "/vinnsl/{id}/definition", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@PutMapping(value = "/vinnsl/{id}/definition", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@ApiOperation(value = "Add/Replace ViNNSL Definition of Neural Network")
 	ResponseEntity<?> addDefinitionToVinnsl(@PathVariable("id") String id, @RequestBody Definition def) {
 		Vinnsl result = nnRepository.findOne(id);
 		
-		result.definition = def;
-		nnRepository.save(result);
-		
 		if (result != null) {
+			result.definition = def;
+			nnRepository.save(result);
 			return ResponseEntity.ok().body(nnRepository.findOne(id));
 		} else {
 			//TODO https://stackoverflow.com/questions/36848562/add-a-body-to-a-404-not-found-exception
@@ -81,14 +86,14 @@ public class VinnslServiceController {
 		}
 	}
 	
-	@RequestMapping(value = "/vinnsl/{id}/instanceschema", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@PutMapping(value = "/vinnsl/{id}/instanceschema", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@ApiOperation(value = "Add/Replace ViNNSL Instanceschema of Neural Network")
 	ResponseEntity<?> addInstanceToVinnsl(@PathVariable("id") String id, @RequestBody Instanceschema instance) {
 		Vinnsl result = nnRepository.findOne(id);
 		
-		result.instance = instance;
-		nnRepository.save(result);
-		
 		if (result != null) {
+			result.instance = instance;
+			nnRepository.save(result);
 			return ResponseEntity.ok().body(nnRepository.findOne(id));
 		} else {
 			//TODO https://stackoverflow.com/questions/36848562/add-a-body-to-a-404-not-found-exception
@@ -96,14 +101,14 @@ public class VinnslServiceController {
 		}
 	}
 	
-	@RequestMapping(value = "/vinnsl/{id}/trainingresult", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@PutMapping(value = "/vinnsl/{id}/trainingresult", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@ApiOperation(value = "Add/Replace ViNNSL Trainingresult of Neural Network")
 	ResponseEntity<?> addResultToVinnsl(@PathVariable("id") String id, @RequestBody Trainingresultschema trainingresult) {
 		Vinnsl result = nnRepository.findOne(id);
 		
-		result.trainingresult = trainingresult;
-		nnRepository.save(result);
-		
 		if (result != null) {
+			result.trainingresult = trainingresult;
+			nnRepository.save(result);
 			return ResponseEntity.ok().body(nnRepository.findOne(id));
 		} else {
 			//TODO https://stackoverflow.com/questions/36848562/add-a-body-to-a-404-not-found-exception
@@ -111,14 +116,14 @@ public class VinnslServiceController {
 		}
 	}
 	
-	@RequestMapping(value = "/vinnsl/{id}/resultschema", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@PutMapping(value = "/vinnsl/{id}/resultschema", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@ApiOperation(value = "Add/Replace ViNNSL Resultschema of Neural Network")
 	ResponseEntity<?> addResultToVinnsl(@PathVariable("id") String id, @RequestBody Resultschema resultSchema) {
 		Vinnsl result = nnRepository.findOne(id);
 		
-		result.result = resultSchema;
-		nnRepository.save(result);
-		
 		if (result != null) {
+			result.result = resultSchema;
+			nnRepository.save(result);
 			return ResponseEntity.ok().body(nnRepository.findOne(id));
 		} else {
 			//TODO https://stackoverflow.com/questions/36848562/add-a-body-to-a-404-not-found-exception
@@ -126,7 +131,8 @@ public class VinnslServiceController {
 		}
 	}
 	
-	@RequestMapping(value = "/vinnsl/{id}/addfile", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@PutMapping(value = "/vinnsl/{id}/addfile", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@ApiOperation(value = "Add/Replace File of Neural Network")
 	public ResponseEntity<Vinnsl> addFileToVinnslNetwork(@PathVariable("id") String id, @RequestParam("fileId") String fileId) {
 		Vinnsl result = nnRepository.findOne(id);
 		
@@ -147,6 +153,7 @@ public class VinnslServiceController {
 	}
 	
 	@DeleteMapping(value = "/vinnsl/{id}")
+	@ApiOperation(value = "Remove Neural Network Object")
 	public ResponseEntity removeNn(@PathVariable("id") String id) {
 		nnRepository.delete(id);
 		
@@ -154,74 +161,16 @@ public class VinnslServiceController {
 		
 	}
 	
-	
-	@RequestMapping(value = "/vinnsl/deleteall", produces = {MediaType.APPLICATION_JSON_VALUE})
+	@DeleteMapping(value = "/vinnsl/deleteall", produces = {MediaType.APPLICATION_JSON_VALUE})
+	@ApiOperation(value = "Delete all Neural Networks")
 	public ResponseEntity<?> removeAllNn() {
 		nnRepository.deleteAll();
 		
-		Map<String, String> message = new HashMap<String, String>();
+		Map<String, String> message = new HashMap<>();
 		message.put("message", "all vinnsl deleted");
 		
 		return ResponseEntity.ok(message);
 		
 	}
-	
-	@RequestMapping(value = "/dl4j/{id}", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity pullDl4JConfiguration(@PathVariable("id") String id, @RequestBody String dl4J) {
-		Vinnsl result = nnRepository.findOne(id);
-		
-		if (result != null) {
-			result.nncloud.setDl4jNetwork(dl4J);
-			nnRepository.save(result);
-			
-			return ResponseEntity.ok().build();
-		} else {
-			return ResponseEntity.notFound().build();
-		}
-	}
-	
-	@RequestMapping(value = "/dl4j/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<String> getDl4JNetwork(@PathVariable("id") String id) {
-		Vinnsl result = nnRepository.findOne(id);
-		
-		if (result != null) {
-			return ResponseEntity.ok().body(result.nncloud.getDl4jNetwork());
-		} else {
-			//TODO https://stackoverflow.com/questions/36848562/add-a-body-to-a-404-not-found-exception
-			return ResponseEntity.notFound().build();
-		}
-	}
-	
-	/*@RequestMapping(value = "/vinnsl/updatexml/{id}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_XML_VALUE)
-	ResponseEntity<?> updateXml(@PathVariable("id") String id, @RequestBody Vinnsl input) {
-		input.identifier = id;
-		
-		DBObject update = getDbObject(input);
-		//mongoTemplate.updateFirst(query(where("id").is(id)), Update.fromDBObject(new BasicDBObject("$set", update)).push("events", order), Order.class);
-		//return mongoTemplate.findOne(query(where("id").is(id)), Order.class);
-		mongoOperations.updateFirst(query(where("_id").is(id)), Update.fromDBObject(new BasicDBObject("$set", update)).push("events", input), Vinnsl.class);
-		return ResponseEntity.ok().body(input);
-		
-		*//*return this.accountRepository
-				.findByUsername(userId)
-				.map(account -> {
-					Bookmark result = bookmarkRepository.save(new Bookmark(account,
-							input.uri, input.description));
-					
-					URI location = ServletUriComponentsBuilder
-							.fromCurrentRequest().path("/{id}")
-							.buildAndExpand(result.getId()).toUri();
-					
-					return ResponseEntity.created(location).build();
-				})
-				.orElse(ResponseEntity.noContent().build());*//*
-		
-	}*/
-	
-	/*private DBObject getDbObject(Object o) {
-		BasicDBObject basicDBObject = new BasicDBObject();
-		mongoConverter.write(o, basicDBObject);
-		return basicDBObject;
-	}*/
 	
 }
