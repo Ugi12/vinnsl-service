@@ -98,7 +98,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <replicas>2</replicas>
+                    <replicas>1</replicas>
                     <resources>
                         <labels>
                             <all>
