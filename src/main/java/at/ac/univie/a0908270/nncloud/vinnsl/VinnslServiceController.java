@@ -138,10 +138,15 @@ public class VinnslServiceController {
 		
 		if (result != null) {
 			Dataschema dataschema = new Dataschema();
+			dataschema.setIdentifier(fileId);
 			Dataschema.Data data = new Dataschema.Data();
 			data.setFile(fileId);
 			dataschema.setData(data);
 			result.data = dataschema;
+			
+			Definition.Data defData = new Definition.Data();
+			defData.setDataSchemaID(fileId);
+			result.definition.setData(defData);
 			
 			nnRepository.save(result);
 			

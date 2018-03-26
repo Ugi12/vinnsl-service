@@ -58,7 +58,9 @@ public class VinnslServiceApplication {
 	
 	@Bean
 	public MongoClientOptions mongoOptions() {
-		return MongoClientOptions.builder().serverSelectionTimeout(2000).build();
+		return MongoClientOptions.builder()
+				.serverSelectionTimeout(2000)
+				.build();
 	}
 	
 	@EnableSwagger2
