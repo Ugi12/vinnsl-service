@@ -49,13 +49,14 @@ public class VinnslServiceApplication {
 		return new WebMvcConfigurerAdapter() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
+
 				registry.addMapping("/*").allowedOrigins("*");
 				registry.addMapping("/vinnsl/*").allowedOrigins("*");
 				registry.addMapping("/status/*").allowedOrigins("*");
 			}
 		};
 	}
-	
+
 	@Bean
 	public MongoClientOptions mongoOptions() {
 		return MongoClientOptions.builder()

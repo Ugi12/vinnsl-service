@@ -1,8 +1,8 @@
 package at.ac.univie.a0908270.nncloud.vinnsl;
 
 import at.ac.univie.a00908270.vinnsl.schema.*;
-import at.ac.univie.a0908270.nncloud.db.NeuronalNetworkRepository;
-import at.ac.univie.a0908270.nncloud.db.Vinnsl;
+import at.ac.univie.a0908270.nncloud.db.*;
+import at.ac.univie.a0908270.nncloud.db.Process;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.MongoConverter;
 import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -25,6 +26,12 @@ public class VinnslServiceController {
 	
 	@Autowired
 	NeuronalNetworkRepository nnRepository;
+
+	@Autowired
+	StatisticRepository statisticRepository;
+
+	@Autowired
+	ProcessRepository processRepository;
 	
 	@Autowired
 	MongoConverter mongoConverter;
@@ -176,6 +183,74 @@ public class VinnslServiceController {
 		
 		return ResponseEntity.ok(message);
 		
+	}
+
+
+	@PostMapping(value = "/vinnsl/create-update/statistic")
+	@ApiOperation(value = "create or update statistics for network")
+	ResponseEntity<?> createOrUpdateStatistic(@RequestBody Statistic statistic){
+
+		Statistic result = statisticRepository.findOne(statistic.id);
+
+		/**
+		 * create statistic if result is null else update
+		 */
+		if(result == null){
+			statisticRepository.save(statistic);
+		}else{
+			result.lastUpdateTime = statistic.createTimestamp;
+			result.trainingTime = statistic.trainingTime;
+			result.numberOfTraining = result.numberOfTraining + 1;
+			result.lastResult = statistic.lastResult;
+
+			if(Float.parseFloat(result.lastResult) > Float.parseFloat(result.bestResult)){
+				result.bestResult = statistic.lastResult;
+			}
+			if(statistic.epochs != null)
+				result.epochs = statistic.epochs;
+			if(statistic.learningRate != null)
+				result.learningRate = statistic.learningRate;
+			if(statistic.loss != null)
+				result.loss = statistic.loss;
+			if(statistic.batchSize != null)
+				result.batchSize = statistic.batchSize;
+			statisticRepository.save(result);
+		}
+		return ResponseEntity.ok().build();
+	}
+
+	@CrossOrigin(origins = "http://localhost:8083")
+	@GetMapping(value = "/vinnsl/get/statistic/{id}")
+	ResponseEntity<?> getStatisticById(@PathVariable("id") String id){
+		Statistic statistic = statisticRepository.findOne(id);
+
+		return ResponseEntity.ok().body(statistic);
+	}
+
+	@PostMapping(value = "/vinnsl/create-update/process")
+	@ApiOperation(value = "create or update training process for network")
+	ResponseEntity<?> createOrUpdateProcess(@RequestBody at.ac.univie.a0908270.nncloud.db.Process process){
+
+		Process result = processRepository.findOne(process.id);
+
+		/**
+		 * create training process if result is null else update
+		 */
+		if(result == null){
+			processRepository.save(process);
+		}else{
+			result.trainingProcess = process.trainingProcess;
+			processRepository.save(result);
+		}
+		return ResponseEntity.ok().build();
+	}
+
+	@CrossOrigin(origins = "http://localhost:8083")
+	@GetMapping(value = "/vinnsl/get/process/{id}")
+	ResponseEntity<?> getProcessById(@PathVariable("id") String id){
+		Process process = processRepository.findOne(id);
+
+		return ResponseEntity.ok().body(process);
 	}
 	
 }
