@@ -32,6 +32,9 @@ public class VinnslServiceController {
 
 	@Autowired
 	ProcessRepository processRepository;
+
+	@Autowired
+	LstmRepository lstmRepository;
 	
 	@Autowired
 	MongoConverter mongoConverter;
@@ -251,6 +254,34 @@ public class VinnslServiceController {
 		Process process = processRepository.findOne(id);
 
 		return ResponseEntity.ok().body(process);
+	}
+
+	@CrossOrigin(origins = "http://localhost:*")
+	@PostMapping(value = "/vinnsl/save-text/lstm")
+	ResponseEntity<?> saveText(@RequestBody Lstm lstm){
+		Lstm lstm1 = lstmRepository.findOne(lstm.id);
+
+		if(lstm1 == null){
+			lstm.textChanged = false;
+			lstmRepository.save(lstm);
+		} else {
+			if(lstm1.text.equalsIgnoreCase(lstm.text)){
+				lstm.textChanged = false;
+			}else{
+				lstm.textChanged = true;
+			}
+			lstmRepository.save(lstm);
+		}
+
+		return ResponseEntity.ok().body(lstm);
+	}
+
+	@CrossOrigin(origins = "http://localhost:8083")
+	@GetMapping(value = "/vinnsl/get-text/lstm/{id}")
+	ResponseEntity<?> getTextForLstm(@PathVariable("id") String id){
+		Lstm lstm = lstmRepository.findOne(id);
+
+		return ResponseEntity.ok().body(lstm.text);
 	}
 	
 }

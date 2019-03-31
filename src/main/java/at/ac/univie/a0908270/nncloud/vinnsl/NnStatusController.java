@@ -110,6 +110,27 @@ public class NnStatusController {
 		return ResponseEntity.ok(status);
 	}
 
+	@GetMapping(value = "/lstm", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Get Status of specific Neural Networks")
+	ResponseEntity<?> getStatusForLSTMNetwork() {
+		Map<String, NnStatus> status = new HashMap<>();
+
+		String des = "LSTM";
+
+		Query query = new Query();
+		query.fields().include("_id");
+		query.fields().include("nncloud");
+
+		query.addCriteria(Criteria.where("description.metadata.description").regex(des, "i"));
+
+		List<Vinnsl> vinnsl = mongoOperations.find(query, Vinnsl.class);
+
+		for(Vinnsl v : vinnsl){
+			status.put(v.identifier, v.nncloud.getStatus());
+		}
+		return ResponseEntity.ok(status);
+	}
+
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Get Status of Neural Network")
